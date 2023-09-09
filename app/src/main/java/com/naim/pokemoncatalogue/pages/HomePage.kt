@@ -18,7 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.naim.pokemoncatalogue.data.OnGetPokemonCallback
-import com.naim.pokemoncatalogue.data.datasource.PokemonDatasource
+import com.naim.pokemoncatalogue.data.datasource.PokemonRemoteDatasource
 import com.naim.pokemoncatalogue.data.models.PokemonResponse
 import com.naim.pokemoncatalogue.data.repository.PokemonRepository
 import com.naim.pokemoncatalogue.ui.theme.PokemonCatalogueTheme
@@ -27,7 +27,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.naim.pokemoncatalogue.core.local.DBHelper
+import com.naim.pokemoncatalogue.data.datasource.PokemonLocalDatasource
 import com.naim.pokemoncatalogue.pages.state.PokemonState
 import com.naim.pokemoncatalogue.pages.state.PokemonStateStatus
 import kotlinx.coroutines.CoroutineScope
@@ -54,7 +57,7 @@ class HomePage : ComponentActivity() {
 @Composable
 fun HomeContent() {
     var pokemonState by remember { mutableStateOf<PokemonState>(PokemonState()) }
-    val repository = PokemonRepository(PokemonDatasource())
+    val repository = PokemonRepository(PokemonRemoteDatasource(), PokemonLocalDatasource())
     val onGetPokemonCallback = object : OnGetPokemonCallback {
         override fun onGetPokemonCallback(pokemonResponse: PokemonResponse?) {
             pokemonState =
@@ -64,10 +67,11 @@ fun HomeContent() {
                 )
         }
     }
+    val dbHelper = DBHelper(LocalContext.current, null)
     LaunchedEffect(Unit) {
         pokemonState = pokemonState.copy(status = PokemonStateStatus.LOADING)
         repository
-            .getPokemon(onGetPokemonCallback)
+            .getPokemon(dbHelper, onGetPokemonCallback)
     }
     Log.d("HomeContent", "HomeContent: ${pokemonState.status}")
     val pokemonResponse = pokemonState.value
@@ -86,6 +90,7 @@ fun HomeContent() {
                                     pokemonState =
                                         pokemonState.copy(status = PokemonStateStatus.LOADING)
                                     repository.getPokemon(
+                                        dbHelper,
                                         onGetPokemonCallback,
                                         url = pokemonResponse.previous
                                     )
@@ -102,6 +107,7 @@ fun HomeContent() {
                                     pokemonState =
                                         pokemonState.copy(status = PokemonStateStatus.LOADING)
                                     repository.getPokemon(
+                                        dbHelper,
                                         onGetPokemonCallback,
                                         url = pokemonResponse.next
                                     )

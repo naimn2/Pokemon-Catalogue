@@ -1,4 +1,4 @@
-package com.naim.pokemoncatalogue.core
+package com.naim.pokemoncatalogue.core.remote
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

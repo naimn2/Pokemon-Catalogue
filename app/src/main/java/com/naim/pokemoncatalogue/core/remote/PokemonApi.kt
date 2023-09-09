@@ -1,4 +1,4 @@
-package com.naim.pokemoncatalogue.core
+package com.naim.pokemoncatalogue.core.remote
 
 import com.naim.pokemoncatalogue.data.models.PokemonResponse
 import retrofit2.Response
