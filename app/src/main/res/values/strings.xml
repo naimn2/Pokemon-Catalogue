@@ -6,4 +6,5 @@
     <string name="title_activity_detail_page">DetailPage</string>
     <string name="pokemon_detail_sprite">Pokemon Detail Sprite</string>
     <string name="icon_search">Icon Search</string>
+    <string name="icon_sort">Icon Sort</string>
 </resources>

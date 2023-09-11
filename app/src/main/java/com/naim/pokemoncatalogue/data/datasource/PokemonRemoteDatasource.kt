@@ -19,6 +19,7 @@ class PokemonRemoteDatasource() {
         } else {
             val limit: String? = QueryValueFinder.findLimitQueryValue(url)
             val offset: String? = QueryValueFinder.findOffsetQueryValue(url)
+            Log.d("getPokemon", "getPokemon: limit: $limit offset: $offset")
             pokemonApi.getPokemons(limit = limit, offset = offset)
         }
         onGetPokemonCallback.onGetPokemonCallback(result.body())

@@ -5,7 +5,7 @@ import com.naim.pokemoncatalogue.core.remote.RetrofitHelper
 class QueryValueFinder {
     companion object {
         private val OFFSET_REGEX_PATTERN =
-            """$${RetrofitHelper.baseUrl}pokemon/?.*[?&]offset=([^#&]+).*""".toRegex()
+            """${RetrofitHelper.baseUrl}pokemon/?.*[?&]offset=([^#&]+).*""".toRegex()
         private val LIMIT_REGEX_PATTERN =
             """${RetrofitHelper.baseUrl}pokemon/?.*[?&]limit=([^#&]+).*""".toRegex()
 
