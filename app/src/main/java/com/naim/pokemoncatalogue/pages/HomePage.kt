@@ -21,13 +21,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -44,6 +53,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -76,7 +86,8 @@ class HomePage : ComponentActivity() {
 @Composable
 fun HomeContent() {
     val context = LocalContext.current
-    var pokemonState by remember { mutableStateOf<PokemonState>(PokemonState()) }
+    var pokemonState by remember { mutableStateOf(PokemonState()) }
+    var querySearch by remember { mutableStateOf("") }
     val repository = PokemonRepository(PokemonRemoteDatasource(), PokemonLocalDatasource())
     val onGetPokemonCallback = object : OnGetPokemonCallback {
         override fun onGetPokemonCallback(pokemonResponse: PokemonResponse?) {
@@ -92,14 +103,25 @@ fun HomeContent() {
     }
     Log.d("HomeContent", "HomeContent: ${pokemonState.status}")
     val pokemonResponse = pokemonState.value
+    val pokemonsFiltered = pokemonState.filter()
     if (pokemonState.status == PokemonStateStatus.SUCCESS) {
         if (pokemonResponse?.results != null && pokemonResponse.results.isNotEmpty()) {
             Column {
+                Row {
+                    SearchBar(
+                        modifier = Modifier.weight(1f, true),
+                        onValueChange = {
+                            CoroutineScope(Dispatchers.Default).launch {
+                                pokemonState = pokemonState.copy(querySearch = it)
+                            }
+                        }
+                    )
+                }
                 LazyColumn(
                     userScrollEnabled = true, modifier = Modifier.weight(weight = 1f, fill = true)
                 ) {
-                    items(pokemonResponse.results.size) { index ->
-                        val pokemon = pokemonResponse.results[index]
+                    items(pokemonsFiltered.size) { index ->
+                        val pokemon = pokemonsFiltered[index]
                         Card(
                             colors = CardDefaults.cardColors(
                                 containerColor = Color.White
@@ -179,6 +201,27 @@ fun HomeContent() {
     } else if (pokemonState.status == PokemonStateStatus.FAILED) {
         Text(text = "Failed")
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun SearchBar(modifier: Modifier = Modifier, onValueChange: (String) -> Unit) {
+    var text by remember { mutableStateOf("") }
+    TextField(
+        value = text,
+        onValueChange = {
+            text = it
+            onValueChange(it)
+        },
+        modifier = modifier,
+        leadingIcon = { Icon(Icons.Filled.Search, stringResource(id = R.string.icon_search)) },
+        colors = TextFieldDefaults.textFieldColors(
+            containerColor = Color.White,
+            unfocusedIndicatorColor = Color.White,
+            focusedIndicatorColor = Color.White
+        ),
+        placeholder = { Text(text = "Search") }
+    )
 }
 
 @Preview(showBackground = true)
