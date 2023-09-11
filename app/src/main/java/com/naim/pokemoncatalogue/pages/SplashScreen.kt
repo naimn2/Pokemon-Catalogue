@@ -1,5 +1,6 @@
 package com.naim.pokemoncatalogue.pages
 
+import PrimaryButton
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -70,23 +71,13 @@ fun SplashScreenContent() {
                 modifier = Modifier.size(108.dp)
             )
             Spacer(modifier = Modifier.height(24.dp))
-            ElevatedButton(
-                onClick = {
+            PrimaryButton(
+                onClick  = {
                     val intent = Intent(context, HomePage::class.java)
                     context.startActivity(intent)
                 },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                contentPadding = PaddingValues(vertical = 12.dp, horizontal = 24.dp),
-                elevation = ButtonDefaults.buttonElevation(8.dp)
-            ) {
-                Text(
-                    text = stringResource(id = R.string.start).uppercase(Locale.getDefault()),
-                    style = TextStyle.Default.copy(fontSize = 16.sp, fontWeight = FontWeight.Bold),
-                )
-            }
+                text = stringResource(id = R.string.start).uppercase(Locale.getDefault())
+            )
         }
     }
 }

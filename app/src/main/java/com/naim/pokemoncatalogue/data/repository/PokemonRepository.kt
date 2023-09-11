@@ -2,6 +2,7 @@ package com.naim.pokemoncatalogue.data.repository
 
 import android.database.sqlite.SQLiteOpenHelper
 import android.util.Log
+import com.naim.pokemoncatalogue.data.OnGetDetailPokemonCallback
 import com.naim.pokemoncatalogue.data.OnGetPokemonCallback
 import com.naim.pokemoncatalogue.data.datasource.PokemonLocalDatasource
 import com.naim.pokemoncatalogue.data.datasource.PokemonRemoteDatasource
@@ -37,5 +38,9 @@ class PokemonRepository(
             Log.e("TAG", "getPokemon: exception ${e.message}")
             onGetPokemonCallback.onGetPokemonCallback(null)
         }
+    }
+
+    suspend fun getPokemonDetail(id: String, onGetDetailPokemonCallback: OnGetDetailPokemonCallback) {
+        pokemonRemoteDatasource.getPokemonDetail(id, onGetDetailPokemonCallback)
     }
 }

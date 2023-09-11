@@ -1,11 +1,13 @@
 package com.naim.pokemoncatalogue.data
 
+import com.naim.pokemoncatalogue.core.remote.RetrofitHelper
+
 class QueryValueFinder {
     companion object {
         private val OFFSET_REGEX_PATTERN =
-            """https://pokeapi.co/api/v2/pokemon/?.*[?&]offset=([^#&]+).*""".toRegex()
+            """$${RetrofitHelper.baseUrl}pokemon/?.*[?&]offset=([^#&]+).*""".toRegex()
         private val LIMIT_REGEX_PATTERN =
-            """https://pokeapi.co/api/v2/pokemon/?.*[?&]limit=([^#&]+).*""".toRegex()
+            """${RetrofitHelper.baseUrl}pokemon/?.*[?&]limit=([^#&]+).*""".toRegex()
 
         fun findOffsetQueryValue(url: String): String? {
             return OFFSET_REGEX_PATTERN.matchEntire(url)?.groups?.get(1)?.value

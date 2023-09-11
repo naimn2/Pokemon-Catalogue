@@ -3,4 +3,6 @@
     <string name="ic_pokemon_content_desc">Icon Pokemon</string>
     <string name="start">Start</string>
     <string name="title_activity_home_page">HomePage</string>
+    <string name="title_activity_detail_page">DetailPage</string>
+    <string name="pokemon_detail_sprite">Pokemon Detail Sprite</string>
 </resources>
